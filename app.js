@@ -11,7 +11,12 @@ var bodyParser = require('body-parser');
 *
 */
 
-mongoose.connect('mongodb://localhost/test');
+mongoose.connect('mongodb://localhost/nodeTask');
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log('conectado a nodeTask');
+});
 
 /*
 *    Routes import
@@ -19,7 +24,6 @@ mongoose.connect('mongodb://localhost/test');
 */
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
 var hits = require('./routes/hits');
 
 var app = express();
@@ -30,7 +34,6 @@ var app = express();
 */
 
 app.use('/', routes);
-app.use('/users', users);
 app.use('/hits', hits);
 
 // view engine setup
