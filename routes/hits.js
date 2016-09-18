@@ -21,13 +21,6 @@ router.get('/:id', jsonParser, function (req, res) {
 })
 
 /*
- * POST
- */
-router.post('/', jsonParser, function (req, res) {
-    hitController.create(req, res)
-})
-
-/*
  * DELETE
  */
 router.delete('/:id', function (req, res) {

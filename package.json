@@ -15,6 +15,8 @@
     "mongoose": "~4.6.0",
     "monk": "~3.1.2",
     "morgan": "~1.7.0",
+    "request": "^2.75.0",
+    "request-promise": "^4.1.1",
     "serve-favicon": "~2.3.0"
   }
 }

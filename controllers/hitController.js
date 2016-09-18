@@ -1,6 +1,7 @@
-var hitModel = require('../models/hitModel.js')
-var mongoose = require('mongoose')
-var assert = require('assert')
+const Hit = require('../models/hitModel.js')
+const mongoose = require('mongoose')
+const assert = require('assert')
+const hnService = require('../services/HnService.js')
 mongoose.Promise = global.Promise
 
 /**
@@ -15,7 +16,7 @@ module.exports = {
   */
   list: function (req, res) {
     console.log('hitController.list')
-    const query = hitModel.find()
+    const query = Hit.find()
     assert.equal(query.exec().constructor, global.Promise)
     const promise = query.exec()
 
@@ -35,7 +36,7 @@ module.exports = {
     const id = req.params.id
     const criteria = {_id: id}
     console.log('id: ', id)
-    const query = hitModel.findOne(criteria)
+    const query = Hit.findOne(criteria)
     assert.equal(query.exec().constructor, global.Promise)
     const promise = query.exec()
 
@@ -49,24 +50,12 @@ module.exports = {
   },
 
   /**
-  * hitController.create()
-  */
-  create: function (req, res) {
-    console.log('hitController.create')
-    const hit = new hitModel({      title : req.body.title,      url : req.body.url,      author : req.body.author,      points : req.body.points,      story_text : req.body.story_text,      comment_text : req.body.comment_text,      num_comments : req.body.num_comments,      story_id : req.body.story_id,      story_title : req.body.story_title,      story_url : req.body.story_url,      parent_id : req.body.parent_id,      created_at_i : req.body.created_at_i,      _tags : req.body._tags,      objectID : req.body.objectID,      _highlightResult : req.body._highlightResult
-    })
-
-    hit.save()
-    return res.status(201).json(hit)
-  },
-
-  /**
   * hitController.remove()
   */
   remove: function (req, res) {
     console.log('hitController.remove')
     const id = req.params.id
-    const query = hitModel.findByIdAndRemove(id)
+    const query = Hit.findByIdAndRemove(id)
     assert.equal(query.exec().constructor, global.Promise)
     const promise = query.exec()
     console.log(promise)
