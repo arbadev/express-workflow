@@ -37,21 +37,42 @@ block body
         $('#hitsTable').on('click', ":button", function(){
           $(this).closest ('tr').remove ();
         });
-      }  
-  
-  
-  //- ul
-  //-   for hit in hits
-  //-     li #{hit.title} #{hit.author}
-  
-  //- div
-  //- table
-  //-   thead
-  //-     tr: th HITS
-  //-   tbody
-  //-     each hit, i in hits
-  //-       tr
-  //-         td 
-  //-           a(href='https://naltatis.github.io/jade-syntax-docs/#mixin') #{hit.title}
-  //-         td
-  //-           a(href='https://naltatis.github.io/jade-syntax-docs/#mixin') #{hit.author}        
+      }
+      
+      //- (function($) {
+      //-   $('tr').click( function() {
+      //-     window.location = $(this).find('a').attr('href');
+      //-   }).hover( function() {
+      //-     $(this).toggleClass('hover');
+      //-   });
+      //- })(jQuery);
+      
+
+    style.
+      tr:hover {
+        background-color: #fafafa;
+      }
+
+mixin a-btn-danger(id)
+  - var type = 'danger'
+  button(onclick='deleteHit("#{id}")' class='btn-#{type}',type='button').btn
+    block
+
+mixin table(hits,type)
+  - var type = type || ""
+  table(id='hitsTable' class='#{type}').table
+    tbody
+      each hit, i in hits
+        tr
+          td
+            - var url = hit.story_url || hit.url
+            - var title = hit.story_title || hit.title
+            a(href=url) #{title}. - #{hit.author} -
+          td
+            - var date = hit.created_at
+            p #{ moment(date).calendar() }
+          td
+            -var id = hit._id
+            +a-btn-danger(id)
+              +icon('trash')
+              
