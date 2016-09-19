@@ -1,12 +1,19 @@
-var express = require('express')
-var router = express.Router()
+const express = require('express')
+const router = express.Router()
 const Hit = require('../models/hitModel.js')
-const rp = require('request-promise')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
-  var query = Hit.find({}, { skip: 10, limit: 5 }).select({'title':1, 'author':1, 'story_title':1, 'story_url':1, 'url':1, 'created_at':1})
+  const selectAttributes = {
+    title: 1,
+    author: 1,
+    story_title: 1,
+    story_url: 1,
+    url: 1,
+    created_at: 1
+  }
+  const query = Hit.find({}).select(selectAttributes)
 
   const promise = query.exec()
   promise.then(hits => {
@@ -15,19 +22,11 @@ router.get('/', function(req, res, next) {
     {
       title: 'Express',
       hits: hits
-
-
     })
   })
   .catch(error => {
     console.log('error ', error)
   })
-
-  const hits = [
-    {title:'Cuentos selectos', author:'Andres'},
-    {title:'Padre rico, padre pobre', author:'Marian'},
-    {title:'El alquimista', author:'Shaco'}
-  ]
 
 })
 
