@@ -1,0 +1,39 @@
+extends ../node_modules/jade-bootstrap/_bootstrap.jade
+link(rel="stylesheet",href="/public/stylesheets/style.css")
+
+
+
+block body
+  .jumbotron
+    .container
+      h1 HN Feed
+        p   
+        p We <3 haker news!
+
+  .col-md-10.col-md-offset-1
+    +table(hits)
+  
+    script.
+      var deleteHit = function() {
+        console.log('something')
+        $('#hitsTable').on('click', ":button", function(){
+          $(this).closest ('tr').remove ();
+        });
+      }  
+  
+  
+  //- ul
+  //-   for hit in hits
+  //-     li #{hit.title} #{hit.author}
+  
+  //- div
+  //- table
+  //-   thead
+  //-     tr: th HITS
+  //-   tbody
+  //-     each hit, i in hits
+  //-       tr
+  //-         td 
+  //-           a(href='https://naltatis.github.io/jade-syntax-docs/#mixin') #{hit.title}
+  //-         td
+  //-           a(href='https://naltatis.github.io/jade-syntax-docs/#mixin') #{hit.author}        

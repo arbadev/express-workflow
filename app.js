@@ -83,7 +83,7 @@ function refreshHits() {
     const hitsNumber = 1000
     const afterAt = hit[0].created_at_i
     const request = hnService.newHits(query, hitsNumber, afterAt)
-    console.log('Hit latest =====>', afterAt)
+    console.log('Latest Hit =====>', afterAt)
     return request
   }).then(hnArray => {
     const hitsArray =  JSON.parse(hnArray).hits
