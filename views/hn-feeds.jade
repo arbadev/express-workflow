@@ -4,6 +4,31 @@ link(rel="stylesheet",href="/public/stylesheets/style.css")
 
 
 block body
+  mixin a-btn-danger(id)
+    - var type = 'danger'
+    button(onclick='deleteHit("#{id}")' class='btn-#{type}',type='button').btn
+      block
+
+  mixin table(hits,type)
+    - var type = type || ""
+    table(id='hitsTable' class='#{type}').table
+      tbody
+        each hit, i in hits
+          tr
+            td
+              - var url = hit.story_url || hit.url
+              - var title = hit.story_title || hit.title
+              a(href=url) #{title}. - #{hit.author} -
+            td
+              - var date = hit.created_at
+              p #{ moment(date).calendar() }
+            td
+              -var id = hit._id
+              +a-btn-danger(id)
+                +icon('trash')
+  mixin icon(name)
+    span.glyphicon(class="glyphicon-#{name}",aria-hidden="true")
+
   .jumbotron
     .container
       h1 HN Feed
@@ -11,8 +36,8 @@ block body
         p We <3 haker news!
 
   .col-md-10.col-md-offset-1
-    +table(hits)
-  
+    +table(hits)              
+
     script.
       var deleteHit = function(id) {
         console.log('something')
@@ -52,27 +77,3 @@ block body
       tr:hover {
         background-color: #fafafa;
       }
-
-mixin a-btn-danger(id)
-  - var type = 'danger'
-  button(onclick='deleteHit("#{id}")' class='btn-#{type}',type='button').btn
-    block
-
-mixin table(hits,type)
-  - var type = type || ""
-  table(id='hitsTable' class='#{type}').table
-    tbody
-      each hit, i in hits
-        tr
-          td
-            - var url = hit.story_url || hit.url
-            - var title = hit.story_title || hit.title
-            a(href=url) #{title}. - #{hit.author} -
-          td
-            - var date = hit.created_at
-            p #{ moment(date).calendar() }
-          td
-            -var id = hit._id
-            +a-btn-danger(id)
-              +icon('trash')
-              
