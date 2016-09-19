@@ -111,6 +111,12 @@ var routes = require('./routes/index')
 var hits = require('./routes/hits')
 
 var app = express();
+/*
+*    Set mommentjs
+*
+*/
+
+app.locals.moment = require('moment');
 
 /*
 *    Routes at app
