@@ -40,8 +40,6 @@ block body
 
     script.
       var deleteHit = function(id) {
-        console.log('something')
-        console.log('id', id)
         var apiUrl = 'http://localhost:3000/hits/'+id
         $.ajax({
             url: apiUrl,
@@ -63,7 +61,7 @@ block body
           $(this).closest ('tr').remove ();
         });
       }
-      
+
       //- (function($) {
       //-   $('tr').click( function() {
       //-     window.location = $(this).find('a').attr('href');

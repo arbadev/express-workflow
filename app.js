@@ -27,7 +27,6 @@ db.once('open', function() {
 /*
 *    Reset database
 *
-
 db.collections['hits'].drop( function(err) {
 console.log('db dropped');
 });

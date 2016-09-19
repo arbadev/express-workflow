@@ -17,7 +17,6 @@ module.exports = {
   list: function (req, res) {
     console.log('hitController.list')
     const query = Hit.find()
-    assert.equal(query.exec().constructor, global.Promise)
     const promise = query.exec()
 
     promise.then(hits => {
@@ -37,7 +36,6 @@ module.exports = {
     const criteria = {_id: id}
     console.log('id: ', id)
     const query = Hit.findOne(criteria)
-    assert.equal(query.exec().constructor, global.Promise)
     const promise = query.exec()
 
     promise.then(hit => {
@@ -56,7 +54,6 @@ module.exports = {
     console.log('hitController.remove')
     const id = req.params.id
     const query = Hit.findByIdAndRemove(id)
-    assert.equal(query.exec().constructor, global.Promise)
     const promise = query.exec()
     promise.then(removedHit => {
       console.log(removedHit);
