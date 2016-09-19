@@ -6,8 +6,9 @@ var logger = require('morgan')
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
 const Hit = require(`${__dirname}/models/hitModel.js`)
+const LastHit = require(`${__dirname}/models/lastHitModel.js`)
 const hnService = require(`${__dirname}/services/HnService.js`)
-const timer =  10 * 1000
+const timer =  60 * 1000
 
 /*
 * Mongodb
@@ -27,10 +28,17 @@ db.once('open', function() {
 /*
 *    Reset database
 *
-db.collections['hits'].drop( function(err) {
-console.log('db dropped');
-});
 */
+
+// db.collections['lasthits'].drop( function(err) {
+// console.log('db dropped');
+// });
+//
+//
+// db.collections['hits'].drop( function(err) {
+// console.log('db dropped');
+// });
+
 
 /*
 *    Verify  db records
@@ -57,11 +65,23 @@ function verifyDb() {
 function getInitHits() {
   const query = 'nodejs'
   const hitsNumber = 1000
-  const request = hnService.initHits(query, hitsNumber)
-
-  request.then(hnArray => {
+  hnService.initHits(query, hitsNumber).then(hnArray => {
     const hitsArray =  JSON.parse(hnArray).hits
+    const lastHit = {
+      created_at_i:hitsArray[0].created_at_i
+    }
+    /*
+    // Promise.all([Hit.create(hitsArray), LastHit.create(lastHit)])
+        .then(results => console.log('algo'))
+        .catch(err => console.log(err))
+    */
     Hit.create(hitsArray)
+    LastHit.create(lastHit).then(hit => {
+      console.log("si se hizo", hit);
+    }).catch(err => {
+      console.log("error");
+    })
+    console.log('los hits hits',hitsArray[0].created_at_i);
     console.log('Hits loaded . . .')
   })
   .catch(error => {
@@ -76,23 +96,21 @@ function getInitHits() {
 
 function refreshHits() {
   console.log('Refreshing records . . .')
+  const query = 'nodejs'
+  const hitsNumber = 1000
 
-  Hit.find({}).sort({'created_at': -1}).limit(1).then(hit => {
-    const query = 'nodejs'
-    const hitsNumber = 1000
-    var latestDb = Number(hit[0].created_at_i)
-    var latestOa = 0
-    if (latestDb > latestOa) {
-      latestOa = latestDb
-    }
-    console.log('latestDb', latestDb)
-    console.log('latestOa', latestOa)
-    const request = hnService.newHits(query, hitsNumber, latestOa)
-    console.log('Latest Hit =====>', latestOa)
-    return request
-  }).then(hnArray => {
+  LastHit.find({}).then(hits => {
+    console.log('hits --------', hits);
+    const hit =  hits[0].created_at_i
+    console.log('el hit hit',hit);
+    return hnService.newHits(query, hitsNumber, hit)
+  })
+  .then(hnArray => {
     const hitsArray =  JSON.parse(hnArray).hits
     Hit.create(hitsArray)
+    if (Array.isArray(hitsArray) && hitsArray.length) {
+      LastHit.update({}, {$set:hitsArray[0]})
+    }
     console.log('refreshed records . . .')
   }).catch(error => {
     console.log('error', error)
