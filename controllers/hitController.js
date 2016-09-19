@@ -58,10 +58,9 @@ module.exports = {
     const query = Hit.findByIdAndRemove(id)
     assert.equal(query.exec().constructor, global.Promise)
     const promise = query.exec()
-    console.log(promise)
     promise.then(removedHit => {
       console.log(removedHit);
-      return res.status(201).json(removedHit)
+      return res.status(200).json(removedHit)
     })
     .catch(error => {
       return res.status(400).json(removedHit)

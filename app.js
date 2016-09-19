@@ -7,7 +7,7 @@ var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
 const Hit = require(`${__dirname}/models/hitModel.js`)
 const hnService = require(`${__dirname}/services/HnService.js`)
-const timer =  60 * 1000
+const timer =  10 * 1000
 
 /*
 * Mongodb
@@ -81,9 +81,15 @@ function refreshHits() {
   Hit.find({}).sort({'created_at': -1}).limit(1).then(hit => {
     const query = 'nodejs'
     const hitsNumber = 1000
-    const afterAt = hit[0].created_at_i
-    const request = hnService.newHits(query, hitsNumber, afterAt)
-    console.log('Latest Hit =====>', afterAt)
+    var latestDb = Number(hit[0].created_at_i)
+    var latestOa = 0
+    if (latestDb > latestOa) {
+      latestOa = latestDb
+    }
+    console.log('latestDb', latestDb)
+    console.log('latestOa', latestOa)
+    const request = hnService.newHits(query, hitsNumber, latestOa)
+    console.log('Latest Hit =====>', latestOa)
     return request
   }).then(hnArray => {
     const hitsArray =  JSON.parse(hnArray).hits

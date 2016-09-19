@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
 
   const promise = query.exec()
   promise.then(hits => {
-    console.log('hits', hits);
+    console.log('render  . . .')
     res.render('hn-feeds',
     {
       title: 'Express',
