@@ -28,16 +28,11 @@ db.once('open', function() {
 /*
 *    Reset database
 *
-*/
 
-// db.collections['lasthits'].drop( function(err) {
-// console.log('db dropped');
-// });
-//
-//
-// db.collections['hits'].drop( function(err) {
-// console.log('db dropped');
-// });
+db.collections['lasthits', 'hits'].drop( function(err) {
+console.log('db dropped');
+});
+*/
 
 
 /*
