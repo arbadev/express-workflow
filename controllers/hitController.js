@@ -1,7 +1,6 @@
 const Hit = require('../models/hitModel.js')
 const mongoose = require('mongoose')
 const assert = require('assert')
-const hnService = require('../services/HnService.js')
 mongoose.Promise = global.Promise
 
 /**

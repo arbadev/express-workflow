@@ -7,14 +7,13 @@ var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
 const Hit = require(`${__dirname}/models/hitModel.js`)
 const LastHit = require(`${__dirname}/models/lastHitModel.js`)
-const hnService = require(`${__dirname}/services/HnService.js`)
-const timer =  60 * 1000
+const FeedService = require(`${__dirname}/services/FeedService.js`)
+const timer =  30 * 1000
 
 /*
 * Mongodb
 *
 */
-
 mongoose.connect('mongodb://localhost/nodeTask')
 var db = mongoose.connection
 db.on('error', console.error.bind(console, 'connection error:'))
@@ -25,31 +24,18 @@ db.once('open', function() {
 });
 
 
-/*
-*    Reset database
-*
-
-db.collections['lasthits', 'hits'].drop( function(err) {
-console.log('db dropped');
-});
-*/
+// Reset the database
+db.collections['lasthits', 'hits'].drop(() => { console.log('db dropped') })
 
 
 /*
-*    Verify  db records
+* Verify  db records
 *
 */
-
 function verifyDb() {
-  Hit.count({}).then(count => {
-    console.log('Records  =====>', count)
-    if (count == 0) {
-      getInitHits()
-    }
-  })
-  .catch(error => {
-    console.log('error', error)
-  })
+  Hit.count({})
+    .then(count => count == 0 ? getInitHits() : Promise.resolve())
+    .catch(err => console.log)
 }
 
 /*
@@ -58,30 +44,15 @@ function verifyDb() {
 */
 
 function getInitHits() {
-  const query = 'nodejs'
-  const hitsNumber = 1000
-  hnService.initHits(query, hitsNumber).then(hnArray => {
-    const hitsArray =  JSON.parse(hnArray).hits
-    const lastHit = {
-      created_at_i:hitsArray[0].created_at_i
-    }
-    /*
-    // Promise.all([Hit.create(hitsArray), LastHit.create(lastHit)])
-        .then(results => console.log('algo'))
-        .catch(err => console.log(err))
-    */
-    Hit.create(hitsArray)
-    LastHit.create(lastHit).then(hit => {
-      console.log("si se hizo", hit);
-    }).catch(err => {
-      console.log("error");
+  FeedService.initHits()
+    .then(feeds => {
+      const { hits } = feeds
+      const [lastHit] = hits
+      const { created_at_i } = lastHit
+      return Promise.all([Hit.create(hits), LastHit.create({ created_at_i })])
     })
-    console.log('los hits hits',hitsArray[0].created_at_i);
-    console.log('Hits loaded . . .')
-  })
-  .catch(error => {
-    console.log('error', error)
-  })
+    .then(([hits, lastHit]) => console.log('Hits initialised'))
+    .catch(err => console.log('error', err))
 }
 
 /*
@@ -90,28 +61,23 @@ function getInitHits() {
 */
 
 function refreshHits() {
-  console.log('Refreshing records . . .')
-  const query = 'nodejs'
-  const hitsNumber = 1000
-
-  LastHit.find({}).then(hits => {
-    console.log('hits --------', hits);
-    const hit =  hits[0].created_at_i
-    console.log('el hit hit',hit);
-    return hnService.newHits(query, hitsNumber, hit)
-  })
-  .then(hnArray => {
-    const hitsArray =  JSON.parse(hnArray).hits
-    Hit.create(hitsArray)
-    if (Array.isArray(hitsArray) && hitsArray.length) {
-      LastHit.update({}, {$set:hitsArray[0]})
-    }
-    console.log('refreshed records . . .')
-  }).catch(error => {
-    console.log('error', error)
-  })
-
-  setTimeout(refreshHits, timer)
+  LastHit.find({})
+    .then(lastHits => {
+      const [ lastHit ] = lastHits
+      const { created_at_i } =  lastHit
+      return FeedService.newHits(created_at_i)
+    })
+    .then(feeds => {
+      const { hits } = feeds
+      const [lastHit] = hits
+      const promises = [Hit.create(hits)]
+      if (Array.isArray(hits) && hits.length) {
+        promises.push(LastHit.update({}, { $set: lastHit }))
+      }
+      Promise.all(promises).then(() => console.log('Records refreshed'))
+    })
+    .catch(err => console.log('error', err))
+    setTimeout(refreshHits, timer)
 }
 
 /*

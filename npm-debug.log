@@ -1,7 +1,7 @@
 0 info it worked if it ends with ok
-1 verbose cli [ '/usr/local/bin/node', '/usr/local/bin/npm', 'start' ]
+1 verbose cli [ '/usr/bin/nodejs', '/usr/local/bin/npm', 'start' ]
 2 info using npm@3.5.0
-3 info using node@v5.0.0
+3 info using node@v6.6.0
 4 verbose run-script [ 'prestart', 'start', 'poststart' ]
 5 info lifecycle nodeTask@0.0.0~prestart: nodeTask@0.0.0
 6 silly lifecycle nodeTask@0.0.0~prestart: no script for prestart, continuing
@@ -15,18 +15,18 @@
 14 verbose stack Error: nodeTask@0.0.0 start: `node ./bin/www`
 14 verbose stack Exit status 1
 14 verbose stack     at EventEmitter.<anonymous> (/usr/local/lib/node_modules/npm/lib/utils/lifecycle.js:232:16)
-14 verbose stack     at emitTwo (events.js:87:13)
-14 verbose stack     at EventEmitter.emit (events.js:172:7)
+14 verbose stack     at emitTwo (events.js:106:13)
+14 verbose stack     at EventEmitter.emit (events.js:191:7)
 14 verbose stack     at ChildProcess.<anonymous> (/usr/local/lib/node_modules/npm/lib/utils/spawn.js:24:14)
-14 verbose stack     at emitTwo (events.js:87:13)
-14 verbose stack     at ChildProcess.emit (events.js:172:7)
-14 verbose stack     at maybeClose (internal/child_process.js:818:16)
-14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:211:5)
+14 verbose stack     at emitTwo (events.js:106:13)
+14 verbose stack     at ChildProcess.emit (events.js:191:7)
+14 verbose stack     at maybeClose (internal/child_process.js:877:16)
+14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:226:5)
 15 verbose pkgid nodeTask@0.0.0
 16 verbose cwd /home/and3/Documents/Programacion/BackEnd/ReignDesign/node-task
 17 error Linux 4.4.0-36-generic
-18 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "start"
-19 error node v5.0.0
+18 error argv "/usr/bin/nodejs" "/usr/local/bin/npm" "start"
+19 error node v6.6.0
 20 error npm  v3.5.0
 21 error code ELIFECYCLE
 22 error nodeTask@0.0.0 start: `node ./bin/www`
