@@ -8,7 +8,7 @@ var bodyParser = require('body-parser')
 const Hit = require(`${__dirname}/models/hitModel.js`)
 const LastHit = require(`${__dirname}/models/lastHitModel.js`)
 const FeedService = require(`${__dirname}/services/FeedService.js`)
-const timer =  30 * 1000
+const timer =  3600 * 1000
 
 /*
 * Mongodb
