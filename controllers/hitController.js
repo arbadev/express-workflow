@@ -55,7 +55,7 @@ module.exports = {
     const query = Hit.findByIdAndRemove(id)
     const promise = query.exec()
     promise.then(removedHit => {
-      console.log(removedHit);
+      console.log(removedHit)
       return res.status(200).json(removedHit)
     })
     .catch(error => {
