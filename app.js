@@ -25,12 +25,14 @@ db.once('open', function() {
 
 
 // Reset the database
-db.collections['lasthits', 'hits'].drop(() => { console.log('db dropped') })
+// db.collections['lasthits', 'hits'].drop(() => { console.log('db dropped') })
 
 
-/*
-* Verify  db records
-*
+/**
+* @method verifyDb
+* @description Count the number of collections in 'Hit', and populate if
+* its empty
+* @author Andres Barradas
 */
 function verifyDb() {
   Hit.count({})
@@ -38,11 +40,13 @@ function verifyDb() {
     .catch(err => console.log)
 }
 
-/*
-*    Set init records
-*
+/**
+* @method getInitHits
+* @description Consume FeedService 'initHits' method that returns Hits, set
+* the first 'lastHit' value into LastHit model and create the collections in
+* Hit model
+* @author Andres Barradas
 */
-
 function getInitHits() {
   FeedService.initHits()
     .then(feeds => {
@@ -55,11 +59,13 @@ function getInitHits() {
     .catch(err => console.log('error', err))
 }
 
-/*
-*    Refresh records
-*
+/**
+* @method refreshHits
+* @description Find the lastHit value into LastHit model and then find the
+* latest hits on Hacker News with newHits FeedService newHits method and finally
+* call 'setTimeout' with timer and looping it with refreshHits
+* @author Andres Barradas
 */
-
 function refreshHits() {
   LastHit.find({})
     .then(lastHits => {
@@ -84,29 +90,26 @@ function refreshHits() {
 *    Routes import
 *
 */
-
 var routes = require('./routes/index')
 var hits = require('./routes/hits')
 
 var app = express();
-/*
-*    Set mommentjs
-*
-*/
 
-app.locals.moment = require('moment');
+
 
 /*
 *    Routes at app
 *
 */
-
 app.use('/', routes)
 app.use('/hits', hits)
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'jade')
+
+// Moment setup
+app.locals.moment = require('moment');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
