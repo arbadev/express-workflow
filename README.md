@@ -1,5 +1,5 @@
-# node-task
-ReignDesign task  nodejs
+# node-workflow
+Initial nodejs - express workflow
 
 Table of Contents
 -----------------
@@ -20,7 +20,7 @@ The way to get started this project is to clone the repository:
 
 ```bash
 # Get repository from github
-git clone https://github.com/arbadev/node-task.git projectName
+git clone https://github.com/arbadev/express-workflow.git projectName
 
 # Change directory
 cd projectName

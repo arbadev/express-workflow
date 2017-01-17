@@ -5,10 +5,6 @@ var favicon = require('serve-favicon')
 var logger = require('morgan')
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
-const Hit = require(`${__dirname}/models/hitModel.js`)
-const LastHit = require(`${__dirname}/models/lastHitModel.js`)
-const FeedService = require(`${__dirname}/services/FeedService.js`)
-const timer =  3600 * 1000
 
 /*
 * Mongodb
@@ -18,10 +14,8 @@ mongoose.connect('mongodb://localhost/nodeTask')
 var db = mongoose.connection
 db.on('error', console.error.bind(console, 'connection error:'))
 db.once('open', function() {
-  console.log('Connected  =====> nodeTask DB')
+  console.log('Connected  =====> nodeTask Captains DB')
   console.log('Listening on port =====> 3000')
-  verifyDb()
-  setTimeout(refreshHits, timer)
 })
 
 
@@ -29,70 +23,25 @@ db.once('open', function() {
 // db.collections['lasthits', 'hits'].drop(() => { console.log('db dropped') })
 
 
-/**
-* @method verifyDb
-* @description Count the number of collections in 'Hit', and populate if
-* its empty
-* @author Andres Barradas
-*/
-function verifyDb() {
-  Hit.count({})
-    .then(count => count == 0 ? getInitHits() : Promise.resolve())
-    .catch(err => console.log)
-}
+// /**
+// * @method verifyDb
+// * @description Count the number of collections in 'Hit', and populate if
+// * its empty
+// * @author Andres Barradas
+// */
+// function verifyDb() {
+//   Hit.count({})
+//     .then(count => count == 0 ? getInitHits() : Promise.resolve())
+//     .catch(err => console.log)
+// }
 
-/**
-* @method getInitHits
-* @description Consume FeedService 'initHits' method that returns Hits, set
-* the first 'lastHit' value into LastHit model and create the collections in
-* Hit model
-* @author Andres Barradas
-*/
-function getInitHits() {
-  FeedService.initHits()
-    .then(feeds => {
-      const { hits } = feeds
-      const [lastHit] = hits
-      const { created_at_i } = lastHit
-      return Promise.all([Hit.create(hits), LastHit.create({ created_at_i })])
-    })
-    .then(([hits, lastHit]) => console.log('Hits initialised'))
-    .catch(err => console.log('error', err))
-}
-
-/**
-* @method refreshHits
-* @description Find the lastHit value into LastHit model and then find the
-* latest hits on Hacker News with newHits FeedService newHits method and finally
-* call 'setTimeout' with timer and looping it with refreshHits
-* @author Andres Barradas
-*/
-function refreshHits() {
-  LastHit.find({})
-    .then(lastHits => {
-      const [ lastHit ] = lastHits
-      const { created_at_i } =  lastHit
-      return FeedService.newHits(created_at_i)
-    })
-    .then(feeds => {
-      const { hits } = feeds
-      const [lastHit] = hits
-      const promises = [Hit.create(hits)]
-      if (Array.isArray(hits) && hits.length) {
-        promises.push(LastHit.update({}, { $set: lastHit }))
-      }
-      Promise.all(promises).then(() => console.log('Records refreshed'))
-    })
-    .catch(err => console.log('error', err))
-    setTimeout(refreshHits, timer)
-}
 
 /*
 *    Routes import
 *
 */
 var routes = require('./routes/index')
-var hits = require('./routes/hits')
+// var hits = require('./routes/hits')
 
 var app = express()
 
@@ -103,7 +52,7 @@ var app = express()
 *
 */
 app.use('/', routes)
-app.use('/hits', hits)
+// app.use('/hits', hits)
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
