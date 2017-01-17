@@ -1,5 +1,13 @@
-extends layout
+extends ../node_modules/jade-bootstrap/_bootstrap.jade
+link(rel="stylesheet",href="/public/stylesheets/style.css")
 
-block content
-  h1= title
-  p Welcome to #{title}
+block body
+
+  .jumbotron
+    .container
+      h1 Seleccionador de imagenes
+        p   
+        p Busquemos imagenes que subir!
+
+  .col-md-10.col-md-offset-1
+   
