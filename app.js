@@ -19,6 +19,7 @@ var db = mongoose.connection
 db.on('error', console.error.bind(console, 'connection error:'))
 db.once('open', function() {
   console.log('Connected  =====> nodeTask DB')
+  console.log('Listening on port =====> 3000')
   verifyDb()
   setTimeout(refreshHits, timer)
 })
